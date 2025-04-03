@@ -1,0 +1,104 @@
+body {
+    background: linear-gradient(135deg, #ff7eb3, #7b68ee);
+    min-height: 100vh;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+}
+
+.game-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.title {
+    color: #fff;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-weight: bold;
+    font-size: 3rem;
+}
+
+.setup-card, .game-card {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    margin-bottom: 30px;
+    border: none;
+}
+
+.bottle {
+    width: 150px;
+    height: auto;
+    transition: transform 3s ease-out;
+}
+
+.bottle-container {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.spinning {
+    animation: spin 3s ease-out;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(var(--rotation-degree)); }
+}
+
+.challenge-display {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+#truthBtn {
+    background-color: #5bc0de;
+    border-color: #5bc0de;
+}
+
+#dareBtn {
+    background-color: #d9534f;
+    border-color: #d9534f;
+}
+
+#completedBtn {
+    background-color: #5cb85c;
+    border-color: #5cb85c;
+}
+
+.player-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.remove-player {
+    color: #d9534f;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .title {
+        font-size: 2rem;
+    }
+    
+    .bottle {
+        width: 120px;
+    }
+} 

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Verdad o Reto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container-fluid game-container">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h1 class="title mt-4 mb-4">Verdad o Reto</h1>
+            </div>
+        </div>
+
+        <!-- Set up phase -->
+        <div id="setupPhase" class="game-phase">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card setup-card">
+                        <div class="card-body">
+                            <h2 class="card-title text-center mb-4">Configuración del Juego</h2>
+                            <div class="mb-3">
+                                <label for="playerInput" class="form-label">Nombre del Jugador:</label>
+                                <div class="input-group">
+                                    <input type="text" class="form-control" id="playerInput" placeholder="Nombre">
+                                    <button class="btn btn-primary" id="addPlayerBtn">Añadir</button>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Jugadores:</label>
+                                <ul id="playersList" class="list-group">
+                                    <!-- Player list will be populated here -->
+                                </ul>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Nivel de Intensidad:</label>
+                                <select class="form-select" id="intensityLevel">
+                                    <option value="mild">Suave</option>
+                                    <option value="medium">Medio</option>
+                                    <option value="hot" selected>Caliente</option>
+                                    <option value="extreme">Extremo</option>
+                                </select>
+                            </div>
+                            <button id="startGameBtn" class="btn btn-danger w-100 mt-3" disabled>Iniciar Juego</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game phase -->
+        <div id="gamePhase" class="game-phase d-none">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card game-card">
+                        <div class="card-body text-center">
+                            <h2 class="mb-4">Turno de <span id="currentPlayer">Jugador</span></h2>
+                            <div class="bottle-container mb-4">
+                                <img src="./elegante-botella-champan-papel-dorado-celebracion-bebida-festiva.png" id="bottle" class="bottle" alt="Botella">
+                            </div>
+                            <button id="spinButton" class="btn btn-primary btn-lg mb-4">Girar la Botella</button>
+                            
+                            <div id="challengeContainer" class="d-none">
+                                <div class="row mb-3">
+                                    <div class="col">
+                                        <button id="truthBtn" class="btn btn-info btn-lg w-100">Verdad</button>
+                                    </div>
+                                    <div class="col">
+                                        <button id="dareBtn" class="btn btn-danger btn-lg w-100">Reto</button>
+                                    </div>
+                                </div>
+                                <div id="challengeDisplay" class="challenge-display mt-3 d-none">
+                                    <h3 id="challengeType" class="mb-3">Verdad</h3>
+                                    <p id="challengeText" class="fs-5"></p>
+                                    <button id="completedBtn" class="btn btn-success btn-lg mt-3">Completado</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 
