@@ -1,92 +1,986 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Verdad o Reto</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <title>Invitación | Ceremonia de Graduación</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent: #f8b400;
+            --accent-soft: rgba(248, 180, 0, 0.3);
+            --dark: #090b1a;
+            --dark-soft: #151832;
+            --muted: #f4f7fb;
+            --text: #11142d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Poppins", "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text);
+            background-color: var(--muted);
+        }
+
+        header.hero {
+            min-height: 100vh;
+            padding: 4rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background:
+                radial-gradient(circle at top, rgba(248, 180, 0, 0.25), transparent 55%),
+                linear-gradient(135deg, rgba(9, 11, 26, 0.95), rgba(15, 19, 55, 0.85)),
+                url("https://images.unsplash.com/photo-1523580846011-d3a5bc25702b?auto=format&fit=crop&w=1600&q=80") center/cover;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header.hero::after,
+        header.hero::before {
+            content: "";
+            position: absolute;
+            inset: 10%;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            animation: pulse 6s infinite ease-in-out;
+        }
+
+        header.hero::before {
+            inset: 5%;
+            border-color: rgba(248, 180, 0, 0.4);
+            animation-delay: 1.5s;
+        }
+
+        .hero-content {
+            max-width: 780px;
+            position: relative;
+            z-index: 2;
+            animation: fade-in 1.2s ease forwards;
+            backdrop-filter: blur(4px);
+        }
+
+        .hero-content span.badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.35rem 1rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.15);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+        }
+
+        .hero-content h1 {
+            font-family: "Playfair Display", serif;
+            margin: 1rem 0 1rem;
+            font-size: clamp(2.6rem, 7vw, 4.5rem);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .hero-content h1 span {
+            display: block;
+            color: var(--accent);
+        }
+
+        .hero-content p {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2.5rem;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .hero-actions a {
+            padding: 0.95rem 2.8rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+            border-radius: 999px;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .hero-actions a.cta {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 15px 35px rgba(248, 180, 0, 0.35);
+        }
+
+        .hero-actions a.cta-outline {
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            color: white;
+        }
+
+        .hero-actions a:hover {
+            transform: translateY(-4px);
+        }
+
+        section {
+            padding: clamp(3rem, 8vw, 6rem) 1.5rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: clamp(2rem, 6vw, 3.5rem);
+            box-shadow: 0 35px 80px rgba(9, 11, 26, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            inset: 1.5rem;
+            border: 1px solid rgba(9, 11, 26, 0.1);
+            border-radius: 22px;
+            pointer-events: none;
+        }
+
+        .card h2 {
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            font-size: 0.9rem;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+
+        .card h3 {
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
+            margin-bottom: 2rem;
+            color: var(--dark);
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+            gap: 1.2rem;
+        }
+
+        .details-grid div {
+            background: #f9fafc;
+            border-radius: 16px;
+            padding: 1.3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .details-grid div::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: var(--accent-soft);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .details-grid div:hover::after {
+            opacity: 1;
+        }
+
+        .details-grid strong {
+            display: block;
+            font-size: 0.78rem;
+            letter-spacing: 0.2em;
+            color: #4f5d75;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+        }
+
+        .details-grid span {
+            position: relative;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .timeline {
+            margin-top: 3rem;
+            border-left: 2px solid rgba(9, 11, 26, 0.1);
+            padding-left: 1.5rem;
+        }
+
+        .timeline-entry {
+            position: relative;
+            margin-bottom: 1.8rem;
+            padding-left: 1rem;
+        }
+
+        .timeline-entry::before {
+            content: "";
+            position: absolute;
+            left: -1.6rem;
+            top: 0.3rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--accent);
+            box-shadow: 0 0 0 6px rgba(248, 180, 0, 0.2);
+        }
+
+        .timeline-entry h4 {
+            margin: 0;
+            font-size: 1rem;
+            color: var(--dark-soft);
+        }
+
+        .timeline-entry p {
+            margin: 0.3rem 0 0;
+            color: #4f5d75;
+        }
+
+        .split {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(140px, 1fr));
+            gap: 1rem;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 180px;
+            border-radius: 18px;
+            object-fit: cover;
+            filter: grayscale(30%);
+            transition: transform 0.4s ease, filter 0.4s ease;
+        }
+
+        .gallery img:hover {
+            transform: translateY(-6px);
+            filter: grayscale(0%);
+        }
+
+        form.rsvp {
+            background: var(--dark);
+            padding: 2rem;
+            border-radius: 22px;
+            color: white;
+            box-shadow: 0 25px 60px rgba(9, 11, 26, 0.35);
+        }
+
+        form.rsvp h3 {
+            margin-top: 0;
+            font-size: 1.6rem;
+            color: var(--accent);
+        }
+
+        form.rsvp label {
+            display: block;
+            margin: 1rem 0 0.4rem;
+            font-size: 0.9rem;
+            letter-spacing: 0.08em;
+        }
+
+        form.rsvp input,
+        form.rsvp textarea,
+        form.rsvp select {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        form.rsvp textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        form.rsvp button {
+            margin-top: 1.4rem;
+            width: 100%;
+            padding: 0.95rem;
+            border-radius: 999px;
+            border: none;
+            background: var(--accent);
+            color: var(--dark);
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem 1rem 3rem;
+            color: #4f5d75;
+            font-size: 0.95rem;
+        }
+
+        footer strong {
+            color: var(--dark-soft);
+        }
+
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                opacity: 0.4;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.75;
+            }
+        }
+
+        /* Modal de invitación */
+        .invite-backdrop {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(248, 180, 0, 0.25), transparent 55%),
+                        rgba(9, 11, 26, 0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .invite-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        /* Fondo reutilizable para otros modales */
+        .form-backdrop,
+        .letter-backdrop {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at top, rgba(248, 180, 0, 0.25), transparent 55%),
+                        rgba(9, 11, 26, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 998;
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .form-backdrop.show,
+        .letter-backdrop.show {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+
+        .invite-modal {
+            width: min(90%, 420px);
+            background: linear-gradient(145deg, #11142d, #181b3f);
+            border-radius: 24px;
+            padding: 2.2rem 2rem 1.8rem;
+            color: white;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            animation: modal-pop 0.6s ease forwards;
+        }
+
+        .invite-modal::before {
+            content: "🎓";
+            position: absolute;
+            font-size: 5rem;
+            opacity: 0.12;
+            right: -0.2rem;
+            top: -0.8rem;
+        }
+
+        .invite-icon-row {
+            font-size: 1.8rem;
+            margin-bottom: 0.8rem;
+        }
+
+        .invite-modal h2 {
+            margin: 0 0 0.6rem;
+            font-size: 1.4rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .invite-modal p {
+            margin: 0.4rem 0;
+            font-size: 0.98rem;
+        }
+
+        .invite-modal p strong {
+            color: var(--accent);
+        }
+
+        .invite-actions {
+            margin-top: 1.6rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .invite-btn-primary,
+        .invite-btn-ghost {
+            border-radius: 999px;
+            border: none;
+            padding: 0.8rem 1.6rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+        }
+
+        .invite-btn-primary {
+            background: var(--accent);
+            color: var(--dark);
+            box-shadow: 0 12px 28px rgba(248, 180, 0, 0.45);
+        }
+
+        .invite-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 16px 36px rgba(248, 180, 0, 0.55);
+        }
+
+        .invite-btn-ghost {
+            background: transparent;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .invite-btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .invite-close {
+            position: absolute;
+            top: 0.8rem;
+            right: 0.9rem;
+            border: none;
+            background: transparent;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        /* Modal de formulario */
+        .form-modal {
+            width: min(90%, 460px);
+        }
+
+        .form-modal h2 {
+            margin-top: 0;
+            margin-bottom: 1rem;
+            font-size: 1.3rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        .form-modal form {
+            text-align: left;
+            margin-top: 0.5rem;
+        }
+
+        .form-modal label {
+            display: block;
+            margin: 0.8rem 0 0.3rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .form-modal input {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            font-size: 0.95rem;
+        }
+
+        .form-modal input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .form-modal .error {
+            margin-top: 0.5rem;
+            font-size: 0.8rem;
+            color: #ffb3b3;
+            min-height: 1.2em;
+        }
+
+        .form-modal button[type="submit"] {
+            margin-top: 1.4rem;
+            width: 100%;
+            border-radius: 999px;
+            border: none;
+            padding: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: var(--accent);
+            color: var(--dark);
+            cursor: pointer;
+            box-shadow: 0 12px 30px rgba(248, 180, 0, 0.5);
+        }
+
+        /* Carta de invitación */
+        .letter-modal {
+            width: min(95%, 540px);
+            background:
+                radial-gradient(circle at top, rgba(248, 180, 0, 0.18), transparent 60%),
+                #fdf9f0;
+            border-radius: 30px;
+            padding: 2.4rem 2.2rem 2.1rem;
+            color: #372618;
+            box-shadow: 0 38px 90px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+            font-family: "Playfair Display", serif;
+        }
+
+        .letter-modal::before {
+            content: "";
+            position: absolute;
+            inset: 1.1rem;
+            border-radius: 22px;
+            padding: 1px;
+            background: linear-gradient(135deg, #b98f4c, #f8b400, #e2c896);
+            -webkit-mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            mask:
+                linear-gradient(#fff 0 0) content-box,
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .letter-heading {
+            text-align: center;
+            margin-bottom: 1.4rem;
+        }
+
+        .letter-heading span {
+            display: block;
+            font-size: 0.8rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: #b27b23;
+        }
+
+        .letter-heading h2 {
+            margin: 0.4rem 0 0;
+            font-size: 1.9rem;
+        }
+
+        .letter-body {
+            font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 0.98rem;
+            line-height: 1.8;
+        }
+
+        .letter-body p {
+            margin: 0.45rem 0;
+        }
+
+        .letter-body p strong {
+            color: #a76614;
+        }
+
+        .letter-sign {
+            margin-top: 1.8rem;
+            text-align: right;
+            font-style: italic;
+            color: #6b4b20;
+        }
+
+        .letter-close-btn {
+            margin-top: 1.8rem;
+            display: block;
+            width: 100%;
+            border-radius: 999px;
+            border: none;
+            padding: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: #11142d;
+            color: #fdfaf4;
+            cursor: pointer;
+        }
+
+        @keyframes modal-pop {
+            0% {
+                opacity: 0;
+                transform: translateY(18px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-actions {
+                flex-direction: column;
+            }
+
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .card::before {
+                inset: 1rem;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <div class="container-fluid game-container">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="title mt-4 mb-4">Verdad o Reto</h1>
-            </div>
-        </div>
-
-        <!-- Set up phase -->
-        <div id="setupPhase" class="game-phase">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card setup-card">
-                        <div class="card-body">
-                            <h2 class="card-title text-center mb-4">Configuración del Juego</h2>
-                             <h2 class="card-title text-center mb-4">para andres y pliar </h2>
-                            <div class="mb-3">
-                                <label for="playerInput" class="form-label">Nombre del Jugador:</label>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="playerInput" placeholder="Nombre">
-                                    <button class="btn btn-primary" id="addPlayerBtn">Añadir</button>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Jugadores:</label>
-                                <ul id="playersList" class="list-group">
-                                    <!-- Player list will be populated here -->
-                                </ul>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Nivel de Intensidad:</label>
-                                <select class="form-select" id="intensityLevel">
-                                    <option value="mild">Suave</option>
-                                    <option value="medium">Medio</option>
-                                    <option value="hot" selected>Caliente</option>
-                                    <option value="extreme">Extremo</option>
-                                </select>
-                            </div>
-                            <button id="startGameBtn" class="btn btn-danger w-100 mt-3" disabled>Iniciar Juego</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Game phase -->
-        <div id="gamePhase" class="game-phase d-none">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card game-card">
-                        <div class="card-body text-center">
-                            <h2 class="mb-4">Turno de <span id="currentPlayer">Jugador</span></h2>
-                            <div class="bottle-container mb-4">
-                                <img src="./elegante-botella-champan-papel-dorado-celebracion-bebida-festiva.png" id="bottle" class="bottle" alt="Botella">
-                            </div>
-                            <button id="spinButton" class="btn btn-primary btn-lg mb-4">Girar la Botella</button>
-                            
-                            <div id="challengeContainer" class="d-none">
-                                <div class="row mb-3">
-                                    <div class="col">
-                                        <button id="truthBtn" class="btn btn-info btn-lg w-100">Verdad</button>
-                                    </div>
-                                    <div class="col">
-                                        <button id="dareBtn" class="btn btn-danger btn-lg w-100">Reto</button>
-                                    </div>
-                                </div>
-                                <div id="challengeDisplay" class="challenge-display mt-3 d-none">
-                                    <h3 id="challengeType" class="mb-3">Verdad</h3>
-                                    <p id="challengeText" class="fs-5"></p>
-                                    <button id="completedBtn" class="btn btn-success btn-lg mt-3">Completado</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Modal de bienvenida para invitados -->
+    <div class="invite-backdrop" id="invite-backdrop">
+        <div class="invite-modal" role="dialog" aria-labelledby="invite-title" aria-modal="true">
+            <button class="invite-close" id="invite-close" aria-label="Cerrar mensaje">&times;</button>
+            <div class="invite-icon-row">🎉✨🎓</div>
+            <h2 id="invite-title">Invitación Especial</h2>
+            <p>Si tienes este enlace es porque formas parte de algo <strong>muy importante</strong>.</p>
+            <p>Eres uno de nuestros <strong>invitados de honor</strong> a la solemne ceremonia de graduación.</p>
+            <div class="invite-actions">
+                <button class="invite-btn-primary" id="invite-accept">¡Quiero ver los detalles!</button>
+                <button class="invite-btn-ghost" id="invite-later">Ver más tarde</button>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="script.js"></script>
+    <!-- Formulario de confirmación de asistencia -->
+    <div class="form-backdrop" id="form-backdrop">
+        <div class="invite-modal form-modal" role="dialog" aria-labelledby="form-title" aria-modal="true">
+            <button class="invite-close" id="form-close" aria-label="Cerrar formulario">&times;</button>
+            <h2 id="form-title">Confirmar asistencia</h2>
+            <form id="invite-form">
+                <label for="guest-name">Tu nombre completo</label>
+                <input type="text" id="guest-name" placeholder="Nombre del invitado">
+
+                <label for="sender-name">Nombre de quien te envió el enlace</label>
+                <input type="text" id="sender-name" placeholder="Nombre de la persona que te invitó">
+
+                <div class="error" id="form-error"></div>
+
+                <button type="submit">Generar carta de invitación</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Carta de invitación generada -->
+    <div class="letter-backdrop" id="letter-backdrop">
+        <div class="letter-modal" role="dialog" aria-labelledby="letter-title" aria-modal="true">
+            <button class="invite-close" id="letter-close" aria-label="Cerrar carta">&times;</button>
+            <div class="letter-heading">
+                <span>SOLEMNEMENTE</span>
+                <h2 id="letter-title">Carta de invitación</h2>
+            </div>
+            <div class="letter-body">
+                <p>Querido/a <strong><span id="letter-guest"></span></strong>,</p>
+                <p>
+                    Nos complace comunicarte que, gracias a <strong><span id="letter-sender"></span></strong>,
+                    formas parte de la lista de invitados especiales a la
+                    <strong>SOLEMNE CEREMONIA DE GRADUACIÓN DE LA III PROMOCIÓN DE INSTTIC</strong>.
+                </p>
+                <p>
+                    Será un honor contar con tu presencia en este momento tan importante, donde celebraremos el esfuerzo,
+                    la dedicación y los nuevos comienzos de nuestra promoción.
+                </p>
+                <p>
+                    Te esperamos para compartir contigo una noche inolvidable de ceremonia, recepción y fiesta.
+                </p>
+                <div class="letter-sign">
+                    Con aprecio,<br>
+                    Comité de Graduación INSTTIC
+                </div>
+            </div>
+            <button class="letter-close-btn" id="letter-close-main">Cerrar carta</button>
+        </div>
+    </div>
+
+    <header class="hero">
+        <div class="hero-content">
+            <span class="badge">Instituto Superior Tecnológico</span>
+            <h1>
+                SOLEMNE CEREMONIA DE GRADUACION
+                <span>III PROMOCIÓN INSTTIC</span>
+            </h1>
+            <p>Una noche para celebrar el esfuerzo, la constancia y los sueños que hoy se convierten en logros. Acompáñanos a honrar a nuestros nuevos profesionales.</p>
+            <div class="hero-actions">
+                <a class="cta" href="#detalles">Confirmar asistencia</a>
+                <a class="cta-outline" href="#programa">Conoce el programa</a>
+            </div>
+        </div>
+    </header>
+
+    <section id="detalles">
+        <article class="card">
+            <h2>Detalles del evento</h2>
+            <h3>Ceremonia &amp; Gala</h3>
+            <div class="details-grid">
+                <div>
+                    <strong>Fecha</strong>
+                    <span>Sábado 22 de Noviembre de 2025 · a partir de las 9:00 horas</span>
+                </div>
+                <div>
+                    <strong>Lugar</strong>
+                    <span>GRAN HOTEL DJIBLOHO</span>
+                </div>
+                <div>
+                    <strong>Código de vestimenta</strong>
+                    <span>Gala impecable, no se permiten pantalones cortos, playera, jeans, etc.</span>
+                </div>
+            </div>
+
+            <div id="programa" class="timeline">
+                <div class="timeline-entry">
+                    <h4>1 · Ceremonia solemne</h4>
+                    <p>Desfile de graduandos, discursos y entrega de diplomas.</p>
+                </div>
+                <div class="timeline-entry">
+                    <h4>Recepción</h4>
+                    <p>Bienvenida oficial, comida y bebida gratis.</p>
+                </div>
+                <div class="timeline-entry">
+                    <h4>Fiesta de celebración (PLAN B)</h4>
+                    <p>Noche de música, baile y sorpresas para la promoción.</p>
+                </div>
+            </div>
+        </article>
+    </section>
+    <footer>
+        <p>
+
+        </p>
+        <p>
+            Página creada por <strong>Billy ESONO</strong>.
+        </p>
+    </footer>
+
+    <!-- SweetAlert2 para mensajes bonitos -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        (function () {
+            const STORAGE_KEY = "insttic_invite_modal_shown_v1";
+            const backdrop = document.getElementById("invite-backdrop");
+            const closeBtn = document.getElementById("invite-close");
+            const acceptBtn = document.getElementById("invite-accept");
+            const laterBtn = document.getElementById("invite-later");
+
+            const formBackdrop = document.getElementById("form-backdrop");
+            const formClose = document.getElementById("form-close");
+            const inviteForm = document.getElementById("invite-form");
+            const guestInput = document.getElementById("guest-name");
+            const senderInput = document.getElementById("sender-name");
+            const formError = document.getElementById("form-error");
+
+            const letterBackdrop = document.getElementById("letter-backdrop");
+            const letterClose = document.getElementById("letter-close");
+            const letterCloseMain = document.getElementById("letter-close-main");
+            const letterGuest = document.getElementById("letter-guest");
+            const letterSender = document.getElementById("letter-sender");
+
+            const heroConfirm = document.querySelector('.hero-actions .cta');
+
+            function hideInviteModal() {
+                if (!backdrop) return;
+                backdrop.classList.remove("show");
+                try {
+                    localStorage.setItem(STORAGE_KEY, "1");
+                } catch (e) {}
+            }
+
+            function showInviteModalIfNeeded() {
+                try {
+                    if (localStorage.getItem(STORAGE_KEY) === "1") return;
+                } catch (e) {}
+                if (!backdrop) return;
+                setTimeout(function () {
+                    backdrop.classList.add("show");
+                }, 600);
+            }
+
+            function openForm() {
+                if (!formBackdrop) return;
+                formBackdrop.classList.add("show");
+                if (guestInput) {
+                    guestInput.focus();
+                }
+            }
+
+            function closeForm() {
+                if (!formBackdrop) return;
+                formBackdrop.classList.remove("show");
+            }
+
+            function openLetter(guest, sender) {
+                if (!letterBackdrop || !letterGuest || !letterSender) return;
+                letterGuest.textContent = guest;
+                letterSender.textContent = sender;
+                letterBackdrop.classList.add("show");
+            }
+
+            function closeLetter() {
+                if (!letterBackdrop) return;
+                letterBackdrop.classList.remove("show");
+            }
+
+            window.addEventListener("load", showInviteModalIfNeeded);
+
+            if (backdrop) {
+                backdrop.addEventListener("click", function (ev) {
+                    if (ev.target === backdrop) hideInviteModal();
+                });
+            }
+
+            if (closeBtn) {
+                closeBtn.addEventListener("click", hideInviteModal);
+            }
+
+            if (laterBtn) {
+                laterBtn.addEventListener("click", hideInviteModal);
+            }
+
+            if (acceptBtn) {
+                acceptBtn.addEventListener("click", function () {
+                    hideInviteModal();
+                    openForm();
+                });
+            }
+
+            if (heroConfirm) {
+                heroConfirm.addEventListener("click", function (ev) {
+                    ev.preventDefault();
+                    openForm();
+                });
+            }
+
+            if (formBackdrop) {
+                formBackdrop.addEventListener("click", function (ev) {
+                    if (ev.target === formBackdrop) {
+                        closeForm();
+                    }
+                });
+            }
+
+            if (formClose) {
+                formClose.addEventListener("click", closeForm);
+            }
+
+            if (inviteForm) {
+                inviteForm.addEventListener("submit", function (ev) {
+                    ev.preventDefault();
+                    if (formError) formError.textContent = "";
+
+                    const guest = guestInput ? guestInput.value.trim() : "";
+                    const sender = senderInput ? senderInput.value.trim() : "";
+
+                    if (!guest || !sender) {
+                        if (formError) {
+                            formError.textContent = "Por favor completa tu nombre y el nombre de quien te envió el enlace.";
+                        }
+                        return;
+                    }
+
+                    closeForm();
+                    openLetter(guest, sender);
+                });
+            }
+
+            if (letterBackdrop) {
+                letterBackdrop.addEventListener("click", function (ev) {
+                    if (ev.target === letterBackdrop) {
+                        closeLetter();
+                    }
+                });
+            }
+
+            function notifyScreenshotAndClose() {
+                if (window.Swal) {
+                    Swal.fire({
+                        title: "Antes de cerrar...",
+                        text: "¿Realizaste la captura de pantalla de tu invitación?",
+                        icon: "question",
+                        confirmButtonText: "Sí, ya la tengo",
+                        showCancelButton: true,
+                        cancelButtonText: "Aún no",
+                        confirmButtonColor: "#f8b400",
+                        background: "#11142d",
+                        color: "#fdfaf4"
+                    }).then(function (result) {
+                        if (result.isConfirmed) {
+                            closeLetter();
+                        }
+                    });
+                } else {
+                    // Fallback por si SweetAlert2 no carga
+                    alert("¿Realizaste la captura de pantalla de tu invitación?");
+                    closeLetter();
+                }
+            }
+
+            if (letterClose) {
+                letterClose.addEventListener("click", notifyScreenshotAndClose);
+            }
+
+            if (letterCloseMain) {
+                letterCloseMain.addEventListener("click", notifyScreenshotAndClose);
+            }
+        })();
+    </script>
 </body>
-</html> 
+</html>
+
