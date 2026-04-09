@@ -1,104 +1,81 @@
+:root {
+    --pink: #ff007f;
+    --purple: #7a00ff;
+    --dark: #050505;
+    --glass: rgba(255, 255, 255, 0.07);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
 body {
-    background: linear-gradient(135deg, #ff7eb3, #7b68ee);
-    min-height: 100vh;
-    font-family: 'Arial', sans-serif;
-    color: #333;
-}
-
-.game-container {
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.title {
-    color: #fff;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    font-weight: bold;
-    font-size: 3rem;
-}
-
-.setup-card, .game-card {
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-    margin-bottom: 30px;
-    border: none;
-}
-
-.bottle {
-    width: 150px;
-    height: auto;
-    transition: transform 3s ease-out;
-}
-
-.bottle-container {
-    height: 200px;
+    background-color: var(--dark);
+    color: white;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     display: flex;
-    align-items: center;
     justify-content: center;
+    height: 100vh;
+    overflow: hidden;
 }
 
-.spinning {
-    animation: spin 3s ease-out;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(var(--rotation-degree)); }
-}
-
-.challenge-display {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
+.app-container {
+    width: 100%;
+    max-width: 420px;
     padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-#truthBtn {
-    background-color: #5bc0de;
-    border-color: #5bc0de;
-}
-
-#dareBtn {
-    background-color: #d9534f;
-    border-color: #d9534f;
-}
-
-#completedBtn {
-    background-color: #5cb85c;
-    border-color: #5cb85c;
-}
-
-.player-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-direction: column;
 }
 
-.remove-player {
-    color: #d9534f;
-    cursor: pointer;
-    font-size: 1.2rem;
+.screen { display: none; flex-direction: column; height: 100%; animation: fadeIn 0.4s ease; }
+.screen.active { display: flex; }
+
+header { text-align: center; margin-bottom: 30px; }
+h1 { font-size: 2.8rem; letter-spacing: -2px; font-weight: 900; }
+.pink { color: var(--pink); text-shadow: 0 0 20px var(--pink); }
+.subtitle { font-size: 0.8rem; letter-spacing: 4px; color: #666; font-weight: bold; }
+
+/* Registro */
+.registration-box { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+.input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+input { 
+    flex: 1; background: var(--glass); border: 1px solid #333; padding: 15px; 
+    border-radius: 12px; color: white; outline: none; font-size: 1rem;
+}
+input:focus { border-color: var(--pink); }
+#add-player-btn { 
+    background: var(--pink); border: none; color: white; width: 55px; 
+    border-radius: 12px; font-size: 1.5rem; font-weight: bold; 
 }
 
-/* Animations */
-.fade-in {
-    animation: fadeIn 0.5s ease-in;
+#player-list { list-style: none; overflow-y: auto; flex: 1; padding-right: 5px; }
+.player-tag { 
+    background: var(--glass); padding: 12px 15px; border-radius: 10px; 
+    margin-bottom: 10px; display: flex; justify-content: space-between;
+    border-left: 4px solid var(--purple); animation: slideIn 0.3s ease;
 }
+.player-tag span { color: #ff4444; cursor: pointer; font-weight: bold; }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+/* Juego */
+.game-header { text-align: center; margin-bottom: 20px; }
+.turn-label { font-size: 0.9rem; color: #888; display: block; }
+#current-player { font-size: 2rem; font-weight: 900; color: var(--pink); text-transform: uppercase; }
+
+.challenge-card { 
+    flex: 1; background: linear-gradient(145deg, #111, #000); 
+    border: 2px solid var(--pink); border-radius: 30px; 
+    display: flex; align-items: center; justify-content: center; 
+    padding: 35px; text-align: center; box-shadow: 0 0 40px rgba(255, 0, 127, 0.15);
+    margin-bottom: 30px; position: relative;
 }
+#challenge-text { font-size: 1.6rem; font-weight: 600; line-height: 1.4; color: #fff; }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .title {
-        font-size: 2rem;
-    }
-    
-    .bottle {
-        width: 120px;
-    }
-} 
+.main-btn { 
+    background: linear-gradient(45deg, var(--pink), var(--purple)); 
+    border: none; padding: 20px; border-radius: 15px; color: white; 
+    font-weight: bold; font-size: 1.1rem; cursor: pointer;
+    box-shadow: 0 10px 20px rgba(255, 0, 127, 0.3);
+}
+.main-btn:disabled { opacity: 0.2; transform: scale(0.95); }
+.text-btn { background: none; border: none; color: #555; margin-top: 15px; cursor: pointer; text-decoration: underline; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { transform: translateX(-20px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
