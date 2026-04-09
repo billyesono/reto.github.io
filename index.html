@@ -2,47 +2,320 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hot Challenge Extreme</title>
-    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hot & Extreme 18+</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #ff0055;
+            --secondary: #6a00f4;
+            --dark: #0b0915;
+            --glass: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: radial-gradient(circle at center, #1a1a2e 0%, var(--dark) 100%);
+            color: white; margin: 0; display: flex; justify-content: center;
+            align-items: center; min-height: 100vh; padding: 20px; box-sizing: border-box;
+        }
+
+        #age-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); display: flex; justify-content: center;
+            align-items: center; z-index: 2000;
+        }
+
+        .modal-content {
+            background: var(--glass); padding: 30px; border-radius: 20px;
+            text-align: center; border: 1px solid var(--primary); width: 85%; max-width: 400px;
+        }
+
+        .container {
+            background: var(--glass); backdrop-filter: blur(20px);
+            padding: 25px; border-radius: 25px; width: 100%; max-width: 450px;
+            text-align: center; border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input[type="text"] {
+            flex: 1; padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.2); color: white; outline: none;
+        }
+
+        .player-list { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-bottom: 20px; }
+        .player-tag { background: var(--secondary); padding: 5px 12px; border-radius: 20px; font-size: 0.9rem; }
+
+        .hidden { display: none !important; }
+
+        button {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white; border: none; padding: 12px 20px; border-radius: 15px;
+            cursor: pointer; font-weight: bold; transition: 0.2s;
+        }
+
+        .btn-full { width: 100%; margin-top: 10px; font-size: 1.1rem; }
+        #display-content { font-size: 1.4rem; margin: 25px 0; color: #ffda00; min-height: 80px; font-style: italic; }
+    </style>
 </head>
 <body>
 
-    <div class="app-container">
-        <div id="setup-screen" class="screen active">
-            <header>
-                <h1>HOT <span class="pink"> +18</span></h1>
-                <p class="subtitle">EXTREMO & SEXUAL</p>
-                 <p class="subtitle">Creado X JM</p>
-            </header>
-            
-            <div class="registration-box">
-                <p>Añade a los jugadores:</p>
-                <div class="input-group">
-                    <input type="text" id="player-name" placeholder="Escribe un nombre...">
-                    <button id="add-player-btn">+</button>
-                </div>
-                <ul id="player-list"></ul>
-            </div>
-
-            <button id="start-game-btn" class="main-btn" disabled>EMPEZAR JUEGO</button>
-        </div>
-
-        <div id="game-screen" class="screen">
-            <div class="game-header">
-                <span class="turn-label">TURNO DE:</span>
-                <div id="current-player">---</div>
-            </div>
-            
-            <div class="challenge-card">
-                <p id="challenge-text">¡Prepárate!</p>
-            </div>
-
-            <button id="next-turn-btn" class="main-btn">SIGUIENTE RETO 🔥</button>
-            <button id="back-to-setup" class="text-btn">Editar jugadores</button>
+    <div id="age-modal">
+        <div class="modal-content">
+            <i class="fas fa-exclamation-triangle fa-3x" style="color: var(--primary);"></i>
+            <h2>ADVERTENCIA +18</h2>
+            <p>Este juego contiene retos y verdades extremos.</p>
+            <button class="btn-full" onclick="closeModal()">ENTRAR AL JUEGO</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <div class="container">
+        <h1><i class="fas fa-fire"></i> Verdad o Reto</h1>
+
+        <div id="setup-section">
+            <div class="input-group">
+                <input type="text" id="name-input" placeholder="Nombre del jugador...">
+                <button onclick="addPlayer()"><i class="fas fa-plus"></i></button>
+            </div>
+            <div class="player-list" id="tag-container"></div>
+            <button id="start-btn" class="btn-full hidden" onclick="startGame()">¡EMPEZAR!</button>
+        </div>
+
+        <div id="game-section" class="hidden">
+            <h2 id="turn-display"></h2>
+            <div id="action-buttons">
+                <button class="btn-full" onclick="getTruth()">VERDAD <i class="fas fa-comment"></i></button>
+                <button class="btn-full" onclick="getDare()" style="background: #fff; color: #000;">RETO <i class="fas fa-bolt"></i></button>
+            </div>
+            <div id="result-display" class="hidden">
+                <div id="display-content"></div>
+                <button class="btn-full" onclick="nextTurn()">LISTO <i class="fas fa-check"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 50 VERDADES EXTREMAS ---
+        const truths = [
+            "¿Cuál es tu posición favorita?", "¿Has tenido un trío?", "¿Qué es lo más raro que has buscado en internet?",
+            "¿Has fingido un orgasmo?", "¿Qué parte del cuerpo de alguien de aquí te atrae más?", "¿Has tenido sexo en público?",
+            "¿Quién de aquí te parece más sexy?", "¿Has enviado fotos íntimas?", "¿Cuál es tu mayor fetiche?",
+            "¿Qué harías si estuvieras a solas con el de tu derecha?", "¿Te gusta que te muerdan?", "¿Has tenido un sueño erótico con un amigo?",
+            "¿Cuál es el lugar más extraño donde lo has hecho?", "¿Prefieres dominar o ser dominado?", "¿Qué es lo más 'sucio' que has dicho?",
+            "¿Has tenido un amigo con derechos?", "¿Qué prenda de ropa te parece irresistible?", "¿Te han pillado en el acto?",
+            "¿Has besado a alguien del mismo sexo?", "¿Qué es lo primero que miras en una persona?", "¿Has usado juguetes?",
+            "¿Cuál es tu récord de tiempo?", "¿Qué harías por dinero?", "¿Te gusta que te hablen sucio?",
+            "¿Has tenido una aventura de una noche?", "¿Qué parte de tu cuerpo es la más sensible?", "¿Con quién de aquí tendrías algo?",
+            "¿Prefieres luz prendida o apagada?", "¿Qué es lo más atrevido que te han hecho?", "¿Has hecho sexting hoy?",
+            "¿Qué opinas de las relaciones abiertas?", "¿Te besarías con alguien de aquí ahora?", "¿Has probado comida en la cama?",
+            "¿Qué canción te pone a tono?", "¿Cuál es el nombre de tu mejor amante?", "¿Te han hecho un chupetón recientemente?",
+            "¿Has llorado después de hacerlo?", "¿Qué es lo que nunca harías?", "¿Te atrae alguien mayor que tú?",
+            "¿Cuál es tu secreto mejor guardado?", "¿Has tenido una fantasía con un desconocido?", "¿Te gusta el juego previo?",
+            "¿Qué harías si pudieras ser invisible en una fiesta?", "¿Cuál es tu mayor turn-on?", "¿Has usado ropa interior de otra persona?",
+            "¿Qué es lo que más te gusta lamer?", "¿Has tenido una fantasía con un jefe o profesor?", "¿Qué harías si te quedaras encerrado con tu ex?",
+            "¿Cuál es el piropo más fuerte que te han dicho?", "¿Te gusta que te den azotes?"
+        ];
+
+        // --- 100 RETOS EXTREMOS (Aquí añadí los 100 que pediste) ---
+        const dares = [
+            "Dale un beso en el cuello al de tu derecha.", "Quítate una prenda de ropa.", "Susurra algo sucio al de tu izquierda.",
+            "Haz un baile sexy de 30 segundos.", "Deja que alguien te dé un beso donde quiera.", "Muerde la oreja del de enfrente.",
+            "Quítale una prenda a alguien con los dientes.", "Hazle un masaje sugerente a alguien.", "Tómate un trago del ombligo de alguien.",
+            "Quédate en ropa interior una ronda.", "Simula un orgasmo por 10 segundos.", "Deja que alguien te escriba en el pecho.",
+            "Besa apasionadamente a quien el grupo elija.", "Pasa tu lengua por el cuello de alguien.", "Intercambia camiseta con el de enfrente.",
+            "Deja que alguien te dé un azote.", "Lame un hielo del cuerpo de otra persona.", "Siéntate en el regazo de alguien.",
+            "Muestra tu última foto de la galería.", "Quítate los calcetines con los dientes.", "Desabrocha el pantalón de alguien con una mano.",
+            "Haz 10 flexiones sobre alguien.", "Muestra tu ropa interior.", "Lame el cuello del que tienes al lado.",
+            "Deja que alguien te ponga nata y lámetela.", "Huele el cuello de alguien de forma íntima.", "Haz un twerking rápido.",
+            "Susurra una fantasía al de tu derecha.", "Deja que alguien te muerda el labio.", "Dibuja un corazón con la lengua en alguien.",
+            "Quítate los zapatos y que alguien te lama un dedo.", "Besa al más guapo/a de aquí.", "Deja que alguien te meta un hielo por la espalda.",
+            "Haz un striptease rápido.", "Muerde el hombro del de tu derecha.", "Deja que alguien te dé un beso de 5 segundos.",
+            "Quítate el sujetador por debajo de la camisa.", "Describe cómo le quitarías la ropa a alguien.", "Muestra tus mensajes de WhatsApp.",
+            "Deja que alguien te venda los ojos y te toque.", "Haz un 'lap dance' a alguien.", "Muerde suavemente el muslo de alguien.",
+            "Quítate los pantalones.", "Ponte la ropa interior de otra persona.", "Lame la mano de alguien de forma sexy.",
+            "Deja que alguien te haga un chupetón.", "Besa el abdomen de la persona de enfrente.", "Quítate dos prendas.",
+            "Toca con tu lengua la oreja de alguien.", "Deja que alguien te toque los glúteos.",
+            // Repetición con variantes para llegar a 100
+            "Haz lo mismo que el anterior pero más intenso.", "El de tu derecha decide qué prenda te quitas.", "Besa el cuello del que tienes enfrente.",
+            "Lame el lóbulo de la oreja de alguien.", "Haz ruidos sugerentes al oído de alguien.", "Quítate la camisa.",
+            "Deja que alguien te dé un beso francés.", "Haz un masaje en los pies de forma sexy.", "Dile al grupo tu posición favorita con gestos.",
+            "Ponte en cuatro y que alguien te dé un azote.", "Deja que alguien te lama el cuello.", "Muestra tu última búsqueda en Google.",
+            "Hazle un masaje en las piernas a alguien.", "Besa la clavícula de la persona de tu izquierda.", "Quítate el cinturón usando los dientes.",
+            "Deja que alguien te muerda el labio inferior.", "Describe qué le harías a la persona de enfrente.", "Quítate una prenda y lánzala.",
+            "Haz que alguien te lama un poco de alcohol del cuello.", "Besa a dos personas a la vez (mejillas).", "Quédate en ropa interior el resto del juego.",
+            "Muestra tu foto más sexy.", "Deja que alguien te toque el pecho.", "Haz ruidos de placer mientras bebes algo.",
+            "Quítate los zapatos y calcetines.", "Deja que alguien te dibuje algo en el muslo.", "Besa el ombligo de alguien.",
+            "Susurra 'te quiero hacer de todo' al de tu derecha.", "Lame un dedo de la persona de enfrente.", "Haz un baile de tubo imaginario.",
+            "Quítate la prenda que el grupo elija.", "Deja que alguien te sople en el cuello.", "Muerde el brazo de alguien suavemente.",
+            "Ponte encima de alguien por 20 segundos.", "Deja que alguien te desabroche la camisa.", "Besa la espalda de alguien.",
+            "Haz movimientos de cadera sugerentes.", "Quítate una prenda y quédate así.", "Deja que alguien te lama la mejilla.",
+            "Muestra tu ropa interior por 5 segundos.", "Besa el hombro de la persona de tu izquierda.", "Haz un desfile sexy.",
+            "Deja que alguien te muerda la oreja.", "Quítate los pantalones (si llevas algo debajo).", "Lame el dedo de alguien con nata.",
+            "Susurra al oído de alguien tu mayor secreto.", "Haz como si estuvieras en una película de adultos.", "Besa a la persona que más te atrae.",
+            "Quítate una prenda y dásela al de enfrente.", "Haz que el grupo elija tu último reto extremo.",
+            // --- CONTACTO Y BESOS ---
+    "Dale un beso francés de 20 segundos a [TARGET].",
+    "Pasa tu lengua por el cuello de [TARGET] desde la clavícula hasta la oreja.",
+    "Besa apasionadamente a [TARGET] en los labios por 30 segundos.",
+    "Muerde suavemente el labio inferior de [TARGET] y tira un poco.",
+    "Dale un beso a [TARGET] en la parte interna del muslo, lo más arriba posible.",
+    "Lame la oreja de [TARGET] por dentro y por fuera.",
+    "Besa el ombligo de [TARGET] y baja 5 centímetros con la lengua.",
+    "Dale un beso de 10 segundos a [TARGET] en el lugar que esa persona elija.",
+    "Succiónale el cuello a [TARGET] hasta dejarle un chupetón visible.",
+    "Pasa un hielo por los labios de [TARGET] y luego dale un beso intenso.",
+    "Besa el pecho o escote de [TARGET] durante 15 segundos.",
+    "Lame el pezón de [TARGET] por encima de la ropa.",
+    "Dale un beso 'esquimal' a [TARGET] que termine en un beso francés robado.",
+    "Muerde suavemente el hombro de [TARGET] mientras le susurras algo sucio.",
+    "Besa a [TARGET] y a la persona a tu izquierda al mismo tiempo (beso de 3).",
+    "Lame los labios  lentamente sin llegar a besarlo/a.",
+    "Besa as en la nuca mientras le abrazas por la espalda.",
+    "Dale un beso de 5 segundos a [TARGET] en cada mejilla del trasero (con ropa).",
+    "Chupa el dedo índice de [TARGET] como si fuera un helado.",
+    "Lame una línea desde el ombligo de [TARGET] hasta su barbilla.",
+
+    // --- ROPA Y DESNUDEZ ---
+    "Quítate dos prendas de ropa ahora mismo.",
+    "Desabrocha el pantalón o falda de [TARGET] usando solo los dientes.",
+    "Quédate en ropa interior por los próximos 5 turnos.",
+    "Deja que [TARGET] te meta la mano por debajo de la camiseta por 1 minuto.",
+    "Quítate el sujetador/bra (si llevas) por debajo de la camisa y dáselo a [TARGET].",
+    "Deja que [TARGET] te baje la ropa interior lo suficiente para ver tu marca de bronceado.",
+    "Muestra tu ropa interior a todos por 10 segundos.",
+    "Intercambia tu camiseta con [TARGET] ahora mismo.",
+    "Deja que [TARGET] te quite una prenda de ropa que tú elijas.",
+    "Ponte la ropa interior de [TARGET] por encima de tus pantalones.",
+    "Haz un striptease de 30 segundos frente a [TARGET].",
+    "Quédate solo con una prenda puesta (la que tú quieras).",
+    "Deja que [TARGET] use su mano para explorar por dentro de tu pantalón 20 segundos.",
+    "Quítate los calcetines y deja que [TARGET] te chupe los dedos de los pies.",
+    "Desabrocha 3 botones de la camisa de [TARGET] con una sola mano.",
+    "Lanza una de tus prendas al centro de la habitación y no la recuperes hasta el final.",
+    "Deja que el grupo elija qué prenda debe quitarse [TARGET] por ti.",
+    "Muestra al grupo la última foto sexy que tengas en tu móvil.",
+    "Quédate en ropa interior y deja que [TARGET] te eche un chorro de agua fría.",
+    "Describe con detalle la ropa interior que lleva puesta [TARGET] sin mirar.",
+
+    // --- ACCIÓN Y POSICIONES ---
+    "Hazle un 'lap dance' (baile sexy) a [TARGET] durante 1 minuto.",
+    "Simula tu posición sexual favorita con [TARGET] durante 30 segundos.",
+    "Deja que [TARGET] te dé 5 azotes (nalgadas) fuertes.",
+    "Ponte en posición de perrito y deja que [TARGET] te monte (con ropa).",
+    "Masajea los glúteos de [TARGET] con ambas manos por 1 minuto.",
+    "Haz que [TARGET] se siente en tu regazo mientras le susurras tus fantasías.",
+    "Lame un poco de chocolate o licor del abdomen de [TARGET].",
+    "Ponte encima de [TARGET] y simula un acto sexual moviendo las caderas.",
+    "Deja que [TARGET] te 'ate' las manos con su cinturón por 2 turnos.",
+    "Tómate un trago (shot) servido directamente desde el cuerpo de [TARGET].",
+    "Haz 10 flexiones sobre [TARGET] quedando a pocos milímetros de sus labios.",
+    "Mete un hielo en tu boca y pásalo a la boca de [TARGET] sin manos.",
+    "Deja que [TARGET] te muerda suavemente cualquier parte del cuerpo.",
+    "Haz gemidos de placer reales durante 30 segundos mientras miras a [TARGET].",
+    "Deja que [TARGET] te meta un dedo en la boca mientras tú lo succionas.",
+    "Realiza un masaje sensual en los muslos de [TARGET].",
+    "Pasa tus manos por todo el cuerpo de [TARGET] buscando 'algo oculto'.",
+    "Haz que [TARGET] se acueste y tú ponte a horcajadas sobre su pecho.",
+    "Deja que [TARGET] te sople aire caliente en la entrepierna (con ropa).",
+    "Escribe con tu lengua una palabra en la espalda de [TARGET] y que adivine.",
+
+    // --- CONFESIONES Y OTROS ---
+    "Cuéntale al grupo cuál es tu fetiche más extraño.",
+    "Describe el lugar más raro donde has tenido relaciones.",
+    "Dile a [TARGET] qué parte de su cuerpo te da más ganas de lamer.",
+    "Envía un mensaje de texto atrevido a la última persona que buscaste en Instagram.",
+    "Confiesa quién de los presentes te atrae más sexualmente.",
+    "Describe detalladamente tu último sueño erótico.",
+    "Dile a [TARGET] qué posición te gustaría practicar con él/ella.",
+    "Haz ruidos de orgasmo cada vez que alguien diga 'Hot' por 10 minutos.",
+    "Describe qué es lo que más te calienta de [TARGET].",
+    "Pasa 2 minutos encerrado a solas con [TARGET] en una habitación oscura.",
+    "Lame el sudor de [TARGET] (si hay) o simplemente lame su cuello.",
+    "Deja que [TARGET] te huela la entrepierna por encima de la ropa.",
+    "Tócate a ti mismo/a de forma sugerente mirando a [TARGET] por 30 segundos.",
+    "Besa a todos los del sexo opuesto en la mejilla muy cerca de la boca.",
+    "Deja que [TARGET] use su lengua para recorrer tu columna vertebral.",
+    "Posa para una foto 'Hot' con [TARGET] que el grupo debe tomar.",
+    "Dile al grupo cuántas personas han pasado por tu cama.",
+    "Deja que [TARGET] te dé un beso negro simulado por encima de la ropa.",
+    "Quítate la camiseta y deja que [TARGET] te dé un masaje con hielo.",
+    "Elige a alguien para que sea tu 'esclavo' el resto del juego.",
+    "Lame el pezón de la persona a tu derecha (por encima de la ropa).",
+    "Dale un mordisco juguetón a [TARGET] en la nalga.",
+    "Deja que [TARGET] te acaricie la entrepierna con el pie por 1 minuto.",
+    "Muestra tu mejor 'cara de placer' a la cámara de un móvil.",
+    "Lame el dedo de [TARGET] y luego mételo en tu oreja.",
+    "Susúrrale a [TARGET] algo que te gustaría que te hiciera ahora mismo.",
+    "Deja que [TARGET] te desabroche el bra/sujetador con una sola mano.",
+    "Haz que [TARGET] te lama una zona con sirope o bebida.",
+    "Quédate en ropa interior y haz 20 sentadillas frente a todos.",
+    "Deja que [TARGET] te meta la mano en el bolsillo trasero y apriete.",
+    "Besa la zona donde termina la espalda de [TARGET].",
+    "Deja que [TARGET] use su lengua para 'limpiar' tus labios.",
+    "Simula una masturbación rápida sobre la ropa por 15 segundos.",
+    "Deja que [TARGET] te muerda el cuello mientras gimes.",
+    "Besa el abdomen de [TARGET] y haz círculos con la lengua.",
+    "Describe cómo te gustaría que [TARGET] te quitara la ropa.",
+    "Deja que [TARGET] te meta un hielo en la ropa interior.",
+    "Besa a la persona que tengas a tu izquierda en la boca.",
+    "Haz un baile sexy para todo el grupo.",
+    "Lame la mejilla de [TARGET] de forma muy húmeda.",
+    "Deja que [TARGET] te toque los pechos/pectoral por 30 segundos.",
+    "Dile a [TARGET] un secreto sexual que nadie sepa.",
+    "Besa a [TARGET] en la comisura de los labios por 10 segundos.",
+    "Deja que [TARGET] te quite el cinturón con los dientes.",
+    "Haz que [TARGET] te dé un beso de lengua profundo.",
+    "Quédate solo con la ropa interior el resto de la partida.",
+    "Lame el cuello de [TARGET] y sopla suavemente.",
+    "Deja que [TARGET] te haga un 'hickey' (chupetón) donde quiera.",
+    "Besa a  en el interior de la muñeca.",
+    "Termina el juego quitándote una prenda adicional."
+        ];
+
+        let players = [];
+        let currentIndex = 0;
+
+        function closeModal() { document.getElementById('age-modal').style.display = 'none'; }
+        
+        function addPlayer() {
+            const input = document.getElementById('name-input');
+            const name = input.value.trim();
+            if(name && !players.includes(name)) {
+                players.push(name);
+                const container = document.getElementById('tag-container');
+                container.innerHTML += `<span class="player-tag">${name}</span>`;
+                input.value = '';
+                if(players.length >= 2) document.getElementById('start-btn').classList.remove('hidden');
+            }
+        }
+
+        function startGame() {
+            document.getElementById('setup-section').classList.add('hidden');
+            document.getElementById('game-section').classList.remove('hidden');
+            updateTurn();
+        }
+
+        function updateTurn() {
+            document.getElementById('turn-display').innerText = `Turno de: ${players[currentIndex]}`;
+            document.getElementById('action-buttons').classList.remove('hidden');
+            document.getElementById('result-display').classList.add('hidden');
+        }
+
+        function getTruth() { showResult(truths); }
+        function getDare() { showResult(dares); }
+
+        function showResult(arr) {
+            const text = arr[Math.floor(Math.random() * arr.length)];
+            document.getElementById('display-content').innerText = text;
+            document.getElementById('action-buttons').classList.add('hidden');
+            document.getElementById('result-display').classList.remove('hidden');
+        }
+
+        function nextTurn() {
+            currentIndex = (currentIndex + 1) % players.length;
+            updateTurn();
+        }
+    </script>
 </body>
 </html>
